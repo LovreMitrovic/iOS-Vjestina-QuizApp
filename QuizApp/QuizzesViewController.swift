@@ -51,6 +51,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
             }
             quizzes.append(row)
         }
+        buttonGetQuizzes.isEnabled = false
         showQuizzes()
     }
     
@@ -68,7 +69,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
         
         labelFunFact.text = "Fun Fact"
         labelFunFact.textColor = Styles.secondColor
-        numOfNBA = 3
+        numOfNBA = countInQuizzes(word:"NBA")
         labelNBA.text = "There are "+String(numOfNBA)+" questions that contain the word \"NBA\" "
         labelNBA.textColor = Styles.secondColor
         labelNBA.font = Styles.textFont
@@ -165,6 +166,20 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
         buttonGetQuizzes.autoPinEdge(.top, to: .bottom, of: labelTitle, withOffset:topMarginOfComponents)
         
         }
+    
+    private func countInQuizzes(word:String) -> Int{
+        var ans:Int = 0
+        for section in quizzes{
+            for quiz in section{
+                for question in quiz.questions{
+                    if question.question.contains(word){
+                        ans = ans + 1
+                    }
+                }
+            }
+        }
+        return ans
+    }
 
 }
 
