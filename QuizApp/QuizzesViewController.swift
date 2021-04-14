@@ -146,7 +146,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
         heightOfComponents = 50
         heightOfTitle = 50
         heightOneLiner = 21
-        heightOfCell = 150
+        heightOfCell = 170
         
         labelTitle.autoSetDimensions(to: CGSize(width: widthOfComponents, height: heightOfTitle))
         buttonGetQuizzes.autoSetDimensions(to: CGSize(width: widthOfComponents, height:heightOfComponents))
@@ -154,7 +154,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
         //POLOYAJ
         leadingMarginaOfComponents = self.view.frame.size.width * 0.1
         topMarginOfComponents = 10
-        topMarginOfTitle = 25
+        topMarginOfTitle = 45
         iconPasswordInset = 8
         smallMargin = 3
         
@@ -195,8 +195,8 @@ extension QuizzesViewController: UITableViewDataSource {
         cell.addSubview(labelQuizDescription)
         let imageViewQuiz = UIImageView(image:UIImage(named: "picture.jpg"))
         cell.addSubview(imageViewQuiz)
-        let labelLevel = UILabel()
-        cell.addSubview((labelLevel))
+        let viewLevel = LevelView(frame: CGRect(x: 0, y: 0, width: 80, height: 30),levelOfQuestion: quizzes[indexPath.section][indexPath.row].level)
+        cell.addSubview((viewLevel))
         
         //STYLE VIEWS
         labelQuizTitle.text = quizzes[indexPath.section][indexPath.row].title
@@ -209,20 +209,22 @@ extension QuizzesViewController: UITableViewDataSource {
         
         imageViewQuiz.contentMode = .scaleToFill
         
-        switch quizzes[indexPath.section][indexPath.row].level{
-        case 1:
-            labelLevel.text = "* O O"
-            break
-        case 2:
-            labelLevel.text = "* * O"
-            break
-        case 3:
-            labelLevel.text = "* * *"
-            break
-        default:
-            labelLevel.text = "O O O"
-        }
-        labelLevel.textColor = Styles.secondColor
+        //DIMENSIONS
+        let imageHeight:CGFloat! = 80
+        let leftWidth:CGFloat! = 80
+        let titleHeight:CGFloat! = 20
+        let rightWidth:CGFloat! = widthOfComponents - leftWidth - 20
+        let fullWidth:CGFloat! = widthOfComponents - 20
+        let descriptionHeight:CGFloat! = 50
+        let levelWidth:CGFloat! = 80
+        
+        imageViewQuiz.autoSetDimensions(to: CGSize(width: leftWidth, height: imageHeight))
+        
+        labelQuizTitle.autoSetDimensions(to: CGSize(width: fullWidth, height: titleHeight))
+        
+        labelQuizDescription.autoSetDimensions(to: CGSize(width: rightWidth, height: descriptionHeight))
+        
+        viewLevel.autoSetDimensions(to: CGSize(width: levelWidth, height: titleHeight))
         
         //POSITION
         let leadingMargin:CGFloat! = 10
@@ -239,20 +241,8 @@ extension QuizzesViewController: UITableViewDataSource {
         labelQuizDescription.autoPinEdge(.top, to: .bottom, of: labelQuizTitle, withOffset: verticalMiddleMargin)
         labelQuizDescription.autoPinEdge(.leading, to: .trailing, of: imageViewQuiz, withOffset: HorizontalMiddleMargin)
         
-        //DIMENSIONS
-        let imageHeight:CGFloat! = 80
-        let leftWidth:CGFloat! = 80
-        let titleHeight:CGFloat! = 20
-        let rightWidth:CGFloat! = widthOfComponents - leftWidth - 20
-        let fullWidth:CGFloat! = widthOfComponents - 20
-        let descriptionHeight:CGFloat! = 50
-        
-        imageViewQuiz.autoSetDimensions(to: CGSize(width: leftWidth, height: imageHeight))
-        
-        labelQuizTitle.autoSetDimensions(to: CGSize(width: fullWidth, height: titleHeight))
-        
-        labelQuizDescription.autoSetDimensions(to: CGSize(width: rightWidth, height: descriptionHeight))
-        
+        viewLevel.autoPinEdge(.top, to: .bottom, of: imageViewQuiz, withOffset: verticalMiddleMargin)
+        viewLevel.autoPinEdge(toSuperviewEdge: .leading, withInset: (widthOfComponents-levelWidth)/2)
         
         return cell
         
