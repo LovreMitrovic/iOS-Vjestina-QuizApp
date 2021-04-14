@@ -178,9 +178,7 @@ extension QuizzesViewController: UITableViewDataSource {
         return quizzes[section].count
     }
     
-    func tableView​(
-    _​ tableView: UITableView, titleForHeaderInSection section: Int
-    ) -> ​String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return quizzes[section][0].category.rawValue
     }
     
