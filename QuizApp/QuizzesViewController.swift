@@ -39,6 +39,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
     private var allCategories:[QuizCategory]!
     
     @objc func getQuizzes()->Void{
+        quizzes = []
         dataService = DataService()
         let quizzesArray:[Quiz] = dataService.fetchQuizes()
         let categoriesArray:[QuizCategory] = Array(Set(quizzesArray.map({$0.category})))
@@ -51,7 +52,6 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
             }
             quizzes.append(row)
         }
-        buttonGetQuizzes.isEnabled = false
         showQuizzes()
     }
     
@@ -204,6 +204,7 @@ extension QuizzesViewController: UITableViewDataSource {
         cell.textLabel!.textColor = Styles.secondColor
         
         //CREATE VIEWS
+        //cell.subviews.forEach(<#T##body: (UIView) throws -> Void##(UIView) throws -> Void#>)
         let labelQuizTitle = UILabel()
         cell.addSubview(labelQuizTitle)
         let labelQuizDescription = UILabel()
