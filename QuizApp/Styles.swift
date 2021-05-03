@@ -27,6 +27,8 @@ class Styles:NSObject{
     static let secondColor:UIColor! = .white
     static let secondColorLight:UIColor! = UIColor(red:1,green:1,blue:1,alpha:0.60)
     static let secondColorLighter:UIColor! = UIColor(red:1,green:1,blue:1,alpha:0.30)
+    static let correctColor:UIColor = .green
+    static let wrongColor:UIColor = .red
     static let titleFont:UIFont! = UIFont.preferredFont(forTextStyle: .largeTitle)
     static let textFont:UIFont! = UIFont.preferredFont(forTextStyle: .body)
     static let subtitleFont:UIFont! = UIFont.preferredFont(forTextStyle: .title2)

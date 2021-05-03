@@ -50,9 +50,20 @@ class LoginViewController: UIViewController {
         loginStatus = dataService.login(email: email, password: password)
         print("Username:",email!,"Password",password!)
         switch loginStatus {
-        case .error(let num, let message):
-            print("\(message)")
-        default:break
+            case .error(let num, let message):
+                print("\(message)")
+                break
+            case .success:
+                let quizzesVc = QuizzesViewController()
+                let settingsVc = SettingsViewController()
+                let tabBarCon = UITabBarController()
+                quizzesVc.tabBarItem = UITabBarItem(title: "Quizzes", image: .add, selectedImage: .actions)
+                settingsVc.tabBarItem = UITabBarItem(title: "Settings", image: .actions, selectedImage: .actions)
+                tabBarCon.viewControllers = [quizzesVc,settingsVc]
+                let navCon = UINavigationController(rootViewController: tabBarCon)
+                navCon.modalPresentationStyle = .fullScreen
+                present(navCon, animated: true, completion: nil)
+            default:break
         }
     }
     
@@ -166,7 +177,8 @@ class LoginViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        defineLayoutForViews()
+        widthOfComponents = self.view.frame.size.width * 0.8
+        leadingMarginaOfComponents = self.view.frame.size.width * 0.1
     }
     
 

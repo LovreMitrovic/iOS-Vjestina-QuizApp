@@ -62,7 +62,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
         view.addSubview(labelNBA)
         viewOfQuizzes = UITableView()
         view.addSubview(viewOfQuizzes)
-        viewOfQuizzes.register(UITableViewCell.self, forCellReuseIdentifier: "QuizCell")
+        viewOfQuizzes.register(QuizCellView.self, forCellReuseIdentifier: "QuizCell")
         viewOfQuizzes.dataSource = self
         viewOfQuizzes.delegate = self
         
@@ -99,6 +99,10 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         buildViews()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     private func buildViews(){
@@ -180,7 +184,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
         }
         return ans
     }
-
+    
 }
 
 extension QuizzesViewController: UITableViewDataSource {
@@ -200,18 +204,22 @@ extension QuizzesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell:QuizCellView!
-        cell = tableView.dequeueReusableCell(withIdentifier: "QuizCell", for: indexPath as IndexPath) as? QuizCellView
+        cell = tableView.dequeueReusableCell(withIdentifier: "QuizCell", for: indexPath as IndexPath) as! QuizCellView
         
         cell.labelTitle.text = quizzes[indexPath.section][indexPath.row].title
-        
         cell.labelDescription.text = quizzes[indexPath.section][indexPath.row].description
-        
-        cell.imageQuiz = UIImageView(image:UIImage(named: "picture.jpg"))
-        
+        cell.imageQuiz.image = UIImage(named: "picture.jpg")
         cell.viewLevel.setLevel(levelOfQuestion: quizzes[indexPath.section][indexPath.row].level)
         
         return cell
         
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        let myQuiz = quizzes[indexPath[0]][indexPath[1]]
+        let quizVc = QuizViewController()
+        quizVc.quiz = myQuiz
+        navigationController?.pushViewController(quizVc, animated: false)
     }
     
 }

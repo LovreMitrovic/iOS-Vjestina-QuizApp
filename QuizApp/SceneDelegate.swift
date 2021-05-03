@@ -34,7 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         else {return }
         
         window = UIWindow(windowScene: windowScene)
-        let vc = QuizzesViewController()
+        let vc = LoginViewController()
         window!.rootViewController = vc
         window?.makeKeyAndVisible()
         
@@ -67,6 +67,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
+    
 
 
 }
