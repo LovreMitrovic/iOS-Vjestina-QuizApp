@@ -64,13 +64,9 @@ class QuizViewController:UIViewController {
     
     @objc private func answearSelected(sender:UIButton) -> Void{
         if (sender.tag == quiz.questions[index].correctAnswer){
-            sender.backgroundColor = Styles.correctColor
-            //sender.setBackgroundColor(Styles.correctColor, forState: .highlighted)
             progressBar.nextStep(correct: true)
             correct = correct + 1
         } else {
-            sender.backgroundColor = Styles.wrongColor
-            //sender.setBackgroundColor(Styles.wrongColor, forState: .highlighted)
             progressBar.nextStep(correct: false)
         }
         //sleep(3)
@@ -90,8 +86,12 @@ class QuizViewController:UIViewController {
         labelQuestion.text = quiz.questions[index].question
         for i in 0...3{
             buttonsAnswear[i].setTitle(quiz.questions[index].answers[i], for: .normal)
-            //buttonsAnswear[i].setBackgroundColor(Styles.secondColorLight, forState: .normal)
             buttonsAnswear[i].backgroundColor = Styles.secondColorLight
+            if(quiz.questions[index].correctAnswer == i){
+                buttonsAnswear[i].setBackgroundColor(Styles.correctColor, forState: .highlighted)
+            } else {
+                buttonsAnswear[i].setBackgroundColor(Styles.wrongColor, forState: .highlighted)
+            }
         }
         return
     }
