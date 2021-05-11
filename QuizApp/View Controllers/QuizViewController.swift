@@ -62,6 +62,17 @@ class QuizViewController:UIViewController {
     private var heightOfComponents:CGFloat = 50
     private var widthOfComponents:CGFloat!
     
+    private var router:AppRouter!
+    
+    init(router: AppRouter){
+        super.init(nibName: nil, bundle: nil)
+        self.router = router
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     @objc private func answearSelected(sender:UIButton) -> Void{
         if (sender.tag == quiz.questions[index].correctAnswer){
             progressBar.nextStep(correct: true)
@@ -77,9 +88,7 @@ class QuizViewController:UIViewController {
     private func nextQuestion() -> Void{
         index = index + 1
         if(index == quiz.questions.count){
-            let resultVc = QuizResultViewController()
-            resultVc.setResult(numOfCorrect: correct, numOfSum: quiz.questions.count)
-            self.navigationController?.pushViewController(resultVc, animated: true)
+            router.showQuizResults(correct:correct,sum:quiz.questions.count)
             return
         }
         labelCurrent.text = String(index+1)+"/"+String(quiz.questions.count)
@@ -153,7 +162,7 @@ class QuizViewController:UIViewController {
     }
     
     @objc func backToQuizzes(){
-        navigationController?.popViewController(animated: false)
+        router.backToTabMenu()
     }
     
 }

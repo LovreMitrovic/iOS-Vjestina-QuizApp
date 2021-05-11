@@ -38,6 +38,18 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
     private var numOfNBA:Int!
     private var allCategories:[QuizCategory]!
     
+    
+    private var router:AppRouter!
+    
+    init(router: AppRouter){
+        super.init(nibName: nil, bundle: nil)
+        self.router = router
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     @objc func getQuizzes()->Void{
         quizzes = []
         dataService = DataService()
@@ -216,10 +228,7 @@ extension QuizzesViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
-        let myQuiz = quizzes[indexPath[0]][indexPath[1]]
-        let quizVc = QuizViewController()
-        quizVc.quiz = myQuiz
-        navigationController?.pushViewController(quizVc, animated: false)
+        router.showQuiz(myQuiz: quizzes[indexPath[0]][indexPath[1]])
     }
     
 }

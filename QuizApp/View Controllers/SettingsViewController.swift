@@ -43,9 +43,21 @@ class SettingsViewController: UIViewController{
     private var heightOfComponents:CGFloat = 50
     private var widthOfComponents:CGFloat!
     
+    
+    private var router:AppRouter!
+    
+    init(router: AppRouter){
+        super.init(nibName: nil, bundle: nil)
+        self.router = router
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     @objc
     private func logOut()->Void{
-        dismiss(animated: false, completion: nil)
+        router.backToLogIn()
     }
 
     override func viewDidLoad() {

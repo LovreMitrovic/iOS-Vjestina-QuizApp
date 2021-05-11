@@ -37,6 +37,16 @@ class LoginViewController: UIViewController {
     private var loginStatus:LoginStatus!
     private var passwordVisible:Bool!
     
+    private var router:AppRouter!
+    
+    init(router: AppRouter){
+        super.init(nibName: nil, bundle: nil)
+        self.router = router
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,15 +64,7 @@ class LoginViewController: UIViewController {
                 print("\(message)")
                 break
             case .success:
-                let quizzesVc = QuizzesViewController()
-                let settingsVc = SettingsViewController()
-                let tabBarCon = UITabBarController()
-                quizzesVc.tabBarItem = UITabBarItem(title: "Quizzes", image: .add, selectedImage: .actions)
-                settingsVc.tabBarItem = UITabBarItem(title: "Settings", image: .actions, selectedImage: .actions)
-                tabBarCon.viewControllers = [quizzesVc,settingsVc]
-                let navCon = UINavigationController(rootViewController: tabBarCon)
-                navCon.modalPresentationStyle = .fullScreen
-                present(navCon, animated: true, completion: nil)
+                router.showTabMenu()
             default:break
         }
     }
@@ -179,6 +181,11 @@ class LoginViewController: UIViewController {
         super.viewDidLayoutSubviews()
         widthOfComponents = self.view.frame.size.width * 0.8
         leadingMarginaOfComponents = self.view.frame.size.width * 0.1
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        
     }
     
 

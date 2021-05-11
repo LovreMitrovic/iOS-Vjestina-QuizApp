@@ -36,9 +36,21 @@ class QuizResultViewController: UIViewController{
     private var heightOfComponents:CGFloat = 50
     private var widthOfComponents:CGFloat!
     
+    
+    private var router:AppRouter!
+    
+    init(router: AppRouter){
+        super.init(nibName: nil, bundle: nil)
+        self.router = router
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     @objc
     private func finish() -> Void{
-        navigationController?.popToRootViewController(animated: false)
+        router.backToTabMenu()
     }
     
     func setResult(numOfCorrect:Int, numOfSum:Int){
