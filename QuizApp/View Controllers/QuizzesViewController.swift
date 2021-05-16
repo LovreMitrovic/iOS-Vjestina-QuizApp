@@ -33,13 +33,13 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
     private var heightOfCell:CGFloat!
     
     //PODACI
-    private var quizzes:[[Quiz]]! = []
-    private var dataService:DataService!
+    var quizzes:[[Quiz]]! = []
     private var numOfNBA:Int!
     private var allCategories:[QuizCategory]!
     
     
     private var router:AppRouter!
+    private var quizzesPresenter:QuizzesPresenter!
     
     init(router: AppRouter){
         super.init(nibName: nil, bundle: nil)
@@ -52,17 +52,9 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
     
     @objc func getQuizzes()->Void{
         quizzes = []
-        dataService = DataService()
-        let quizzesArray:[Quiz] = dataService.fetchQuizes()
-        let categoriesArray:[QuizCategory] = Array(Set(quizzesArray.map({$0.category})))
-        for category in categoriesArray{
-            var row:[Quiz]! = []
-            for quiz in quizzesArray{
-                if quiz.category == category{
-                    row.append(quiz)
-                }
-            }
-            quizzes.append(row)
+        quizzesPresenter = QuizzesPresenter(viewController: self)
+        DispatchQueue.global(qos: .userInitiated).sync {
+            quizzesPresenter.fetchQuizzes()
         }
         showQuizzes()
     }

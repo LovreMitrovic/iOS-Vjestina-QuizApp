@@ -33,7 +33,7 @@ class LoginViewController: UIViewController {
     //PODACI
     private var email:String!
     private var password:String!
-    private var dataService:DataService!
+    private var logInPresenter:LogInPresenter!
     private var loginStatus:LoginStatus!
     private var passwordVisible:Bool!
     
@@ -54,18 +54,15 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func logIn()->Void{
-        dataService = DataService()
+        logInPresenter = LogInPresenter(router: self.router)
         email = textEmail.text
         password = textPassword.text
-        loginStatus = dataService.login(email: email, password: password)
-        print("Username:",email!,"Password",password!)
-        switch loginStatus {
-            case .error(let num, let message):
-                print("\(message)")
-                break
-            case .success:
-                router.showTabMenu()
-            default:break
+        print("Username:",self.email!,"Password",self.password!)
+        let userDefaults = UserDefaults()
+        userDefaults.setValue(email, forKey: "user_username")
+        //router.showTabMenu()
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.logInPresenter.login(email: self.email, password: self.password)
         }
     }
     

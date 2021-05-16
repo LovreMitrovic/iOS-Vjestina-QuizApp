@@ -36,7 +36,6 @@ class QuizResultViewController: UIViewController{
     private var heightOfComponents:CGFloat = 50
     private var widthOfComponents:CGFloat!
     
-    
     private var router:AppRouter!
     
     init(router: AppRouter){

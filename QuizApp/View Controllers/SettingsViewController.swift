@@ -67,6 +67,9 @@ class SettingsViewController: UIViewController{
         view.addSubview(labelMyUsername)
         view.addSubview(buttonLogOut)
         
+        let userDefaults = UserDefaults()
+        labelMyUsername.text = userDefaults.string(forKey: "user_username")
+        
         leadingMargin = view.frame.size.width * 0.1
         widthOfComponents = self.view.frame.size.width * 0.8
         

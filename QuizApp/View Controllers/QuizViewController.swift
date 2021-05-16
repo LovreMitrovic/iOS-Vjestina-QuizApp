@@ -63,10 +63,12 @@ class QuizViewController:UIViewController {
     private var widthOfComponents:CGFloat!
     
     private var router:AppRouter!
+    private var resultPresenter:ResultPresenter!
     
     init(router: AppRouter){
         super.init(nibName: nil, bundle: nil)
         self.router = router
+        self.resultPresenter = ResultPresenter()
     }
     
     required init?(coder: NSCoder) {
@@ -88,6 +90,9 @@ class QuizViewController:UIViewController {
     private func nextQuestion() -> Void{
         index = index + 1
         if(index == quiz.questions.count){
+            DispatchQueue.global(qos: .userInitiated).async{
+                self.resultPresenter.finishQuiz(noOfCorrect: self.correct, quizId: self.quiz.id)
+            }
             router.showQuizResults(correct:correct,sum:quiz.questions.count)
             return
         }
@@ -106,6 +111,7 @@ class QuizViewController:UIViewController {
     }
     
     override func viewDidLoad() {
+        resultPresenter.startQuiz()
         view.backgroundColor = Styles.mainColor
         view.addSubview(labelCurrent)
         view.addSubview(labelQuestion)
