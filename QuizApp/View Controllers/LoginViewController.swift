@@ -60,7 +60,6 @@ class LoginViewController: UIViewController {
         print("Username:",self.email!,"Password",self.password!)
         let userDefaults = UserDefaults()
         userDefaults.setValue(email, forKey: "user_username")
-        //router.showTabMenu()
         DispatchQueue.global(qos: .userInitiated).async {
             self.logInPresenter.login(email: self.email, password: self.password)
         }

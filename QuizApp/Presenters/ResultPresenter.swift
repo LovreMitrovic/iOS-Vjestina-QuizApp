@@ -15,23 +15,26 @@ protocol ResultPresenterProtocol{
 class ResultPresenter:ResultPresenterProtocol{
     
     private var timer:Timer!
-    private var seconds:Double!
+    private var start:Date!
+    private var timeElapsed:Double!
     
     func finishQuiz(noOfCorrect:Int, quizId:Int) {
-        timer.invalidate()
+        let end = Date()
+        timeElapsed = DateInterval(start: start, end: end).duration as Double
         
+        print("Zaustavljam timer za id:\(quizId) sa noOfCorrect:\(noOfCorrect) uz timeElapsed:\(timeElapsed!)")
         let networkService = NetworkService<NetworkRespond>()
         let requestUrl  = "https://iosquiz.herokuapp.com/api/result"
         guard let url = URL(string:requestUrl) else { return }
     
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let userDefaults = UserDefaults()
         let token = userDefaults.string(forKey: "user_token")
         request.setValue(token, forHTTPHeaderField: "Authorization")
         
-        let quizResult = QuizResult(quizId: quizId, userId: userDefaults.string(forKey: "user_id")!, time: seconds, noOfCorrect: noOfCorrect)
+        let quizResult = QuizResult(quizId: quizId, userId: userDefaults.string(forKey: "user_id")!, time: timeElapsed, noOfCorrect: noOfCorrect)
         let requestBody = try!JSONEncoder().encode(quizResult)
         request.httpBody = requestBody
         
@@ -49,12 +52,8 @@ class ResultPresenter:ResultPresenterProtocol{
     }
     
     func startQuiz() {
-        seconds = 0
-        timer = Timer(timeInterval: 1, target: self, selector: #selector(keepTimer), userInfo: nil, repeats: true)
+        print("Pokrecem timer")
+        start = Date()
     }
     
-    @objc
-    private func keepTimer(){
-        seconds += 1
-    }
 }

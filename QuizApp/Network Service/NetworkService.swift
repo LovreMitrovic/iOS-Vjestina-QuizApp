@@ -12,7 +12,7 @@ class NetworkService<P:Decodable>: NetworkServiceProtocol{
     func executeUrlRequest(_ request: URLRequest, completionHandler: @escaping (Result<P, RequestError>) -> Void) {
         let dataTask = URLSession.shared.dataTask(with: request){
             data,response, err in
-            guard err != nil else{
+            guard err == nil else{
                 completionHandler(.failure(.clientError))
                 return
             }

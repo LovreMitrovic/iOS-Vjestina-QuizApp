@@ -53,13 +53,12 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
     @objc func getQuizzes()->Void{
         quizzes = []
         quizzesPresenter = QuizzesPresenter(viewController: self)
-        DispatchQueue.global(qos: .userInitiated).sync {
-            quizzesPresenter.fetchQuizzes()
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.quizzesPresenter.fetchQuizzes()
         }
-        showQuizzes()
     }
-    
-    private func showQuizzes(){
+
+    func showQuizzes(){
         labelFunFact = UILabel()
         view.addSubview(labelFunFact)
         labelNBA = UILabel()
@@ -212,7 +211,13 @@ extension QuizzesViewController: UITableViewDataSource {
         
         cell.labelTitle.text = quizzes[indexPath.section][indexPath.row].title
         cell.labelDescription.text = quizzes[indexPath.section][indexPath.row].description
-        cell.imageQuiz.image = UIImage(named: "picture.jpg")
+
+        let url = NSURL(string: quizzes[indexPath.section][indexPath.row].imageUrl)! as URL
+        if let imageData: NSData = NSData(contentsOf: url) {
+            cell.imageQuiz.image = UIImage(data: imageData as Data)
+        }
+        
+        //cell.imageQuiz.image = UIImage(named: quizzes[indexPath.section][indexPath.row].imageUrl)
         cell.viewLevel.setLevel(levelOfQuestion: quizzes[indexPath.section][indexPath.row].level)
         
         return cell

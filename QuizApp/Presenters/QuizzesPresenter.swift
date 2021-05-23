@@ -19,20 +19,21 @@ class QuizzesPresenter: QuizzesPresenterProtocol{
     
     func fetchQuizzes() -> Void {
         
-        let networkService = NetworkService<[Quiz]>()
+        let networkService = NetworkService<Quizzes>()
         let requestUrl  = "https://iosquiz.herokuapp.com/api/quizzes"
         guard let url = URL(string:requestUrl) else { return }
     
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        networkService.executeUrlRequest(request) {(result: Result<[Quiz],RequestError>) in
+        //DispatchQueue.main.async 
+        networkService.executeUrlRequest(request) {(result: Result<Quizzes,RequestError>) in
             switch result{
             case .failure(let error):
                 networkService.handleError(error: error)
                 return
-            case .success(let quizzesArray):
-                
+            case .success(let quizzes):
+                let quizzesArray = quizzes.quizzes
                 let categoriesArray:[QuizCategory] = Array(Set(quizzesArray.map({$0.category})))
                 for category in categoriesArray{
                     var row:[Quiz]! = []
@@ -42,6 +43,10 @@ class QuizzesPresenter: QuizzesPresenterProtocol{
                         }
                     }
                     self.viewController!.quizzes.append(row)
+                }
+                
+                DispatchQueue.main.async {
+                    self.viewController!.showQuizzes()
                 }
                 
                 return

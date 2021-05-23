@@ -28,8 +28,7 @@ class LogInPresenter:LogInProtocol{
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        DispatchQueue.main.async {
-            networkService.executeUrlRequest(request) {(result: Result<Userinfo,RequestError>) in
+        networkService.executeUrlRequest(request) {(result: Result<Userinfo,RequestError>) in
                 switch result{
                 case .failure(let error):
                     networkService.handleError(error: error)
@@ -38,11 +37,12 @@ class LogInPresenter:LogInProtocol{
                     let userDefaults:UserDefaults = UserDefaults()
                     userDefaults.setValue(value.userId, forKey: "user_id")
                     userDefaults.setValue(value.token, forKey: "user_token")
-                    self.router.showTabMenu()
+                    DispatchQueue.main.async {
+                        self.router.showTabMenu()
+                    }
                     return
                 }
             }
-        }
     }
     
 }

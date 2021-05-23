@@ -111,7 +111,9 @@ class QuizViewController:UIViewController {
     }
     
     override func viewDidLoad() {
-        resultPresenter.startQuiz()
+        DispatchQueue.global(qos: .userInitiated).async{
+            self.resultPresenter.startQuiz()
+        }
         view.backgroundColor = Styles.mainColor
         view.addSubview(labelCurrent)
         view.addSubview(labelQuestion)
