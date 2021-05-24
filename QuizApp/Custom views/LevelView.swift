@@ -10,25 +10,38 @@ import UIKit
 
 class LevelView: UIView{
     
-    private var level:Int
+    
+    var level:Int
+    var label:UILabel! = UILabel()
     
     init(frame: CGRect, levelOfQuestion:Int){
         level = levelOfQuestion
         super.init(frame: frame)
-        setupView()
+        
+        label.textColor = Styles.secondColor
+        self.addSubview(label)
+        self.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0, alpha: 0)
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupView(){
-        self.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0, alpha: 0)
-        let label = UILabel()
-        self.addSubview(label)
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
         label.autoPinEdge(toSuperviewEdge: .leading)
         label.autoPinEdge(toSuperviewEdge: .top)
-        label.textColor = Styles.secondColor
+        label.center = CGPoint(x: self.bounds.size.width / 2.0, y:self.bounds.size.height / 2.0)
+    }
+    
+    func setLevel(levelOfQuestion:Int){
+        level = levelOfQuestion
+        self.showLevel()
+    }
+    
+    private func showLevel(){
         switch level{
         case 1:
             label.text = "X O O"
@@ -40,8 +53,8 @@ class LevelView: UIView{
             label.text = "X X X"
             break
         default:
+            label.text = "-----"
             break
         }
-        
     }
 }
