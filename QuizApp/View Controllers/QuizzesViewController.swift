@@ -54,7 +54,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
         quizzes = []
         quizzesPresenter = QuizzesPresenter(viewController: self)
         DispatchQueue.global(qos: .userInitiated).async {
-            self.quizzesPresenter.fetchQuizzes()
+            self.quizzesPresenter.presentQuizzes()
         }
     }
 

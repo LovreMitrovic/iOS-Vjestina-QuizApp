@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import PureLayout
 import UIKit
 
 class QuestionTrackerView:UIStackView{
