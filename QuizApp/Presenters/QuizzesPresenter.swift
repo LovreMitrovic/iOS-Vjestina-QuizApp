@@ -21,10 +21,8 @@ class QuizzesPresenter: QuizzesPresenterProtocol{
     
     func presentQuizzes()->Void{
         DispatchQueue.global(qos: .userInitiated).sync {
-            self.viewController!.quizzes = repository.fetchFromNetwork()
+            self.viewController!.quizzes = repository.fetchQuizzes()
         }
-        print("VIEWCONTROLLER")
-        print(self.viewController!.quizzes!)
         DispatchQueue.main.async {
             self.viewController!.showQuizzes()
         }

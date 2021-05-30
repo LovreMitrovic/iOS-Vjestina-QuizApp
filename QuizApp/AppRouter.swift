@@ -31,10 +31,12 @@ class AppRouter: AppRouterProtocol{
     func showTabMenu(){
         let quizzesVc = QuizzesViewController(router: self)
         let settingsVc = SettingsViewController(router: self)
+        let searchVc = SearchViewController(router:self)
         let tabBarCon = UITabBarController()
         quizzesVc.tabBarItem = UITabBarItem(title: "Quizzes", image: .add, selectedImage: .actions)
         settingsVc.tabBarItem = UITabBarItem(title: "Settings", image: .actions, selectedImage: .actions)
-        tabBarCon.viewControllers = [quizzesVc,settingsVc]
+        searchVc.tabBarItem = UITabBarItem(title: "Search", image: .actions, selectedImage: .actions)
+        tabBarCon.viewControllers = [quizzesVc,settingsVc,searchVc]
         navigationController.setViewControllers([tabBarCon], animated: false)
     }
     
