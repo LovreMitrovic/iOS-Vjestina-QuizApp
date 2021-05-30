@@ -12,7 +12,7 @@ protocol QuizDatabaseDataSourceProtocol {
     
     func fetchQuizzes()
     func saveQuizzes(_ quizzes: [[Quiz]])
-    func deleteAll()
+    func deleteAll() throws
     
 }
 
@@ -29,14 +29,49 @@ class QuizDatabaseDataSource:QuizDatabaseDataSourceProtocol{
         repository = repo
     }
     func fetchQuizzes()->Void{
-        
+        let request: NSFetchRequest<CDQuiz> = CDQuiz.fetchRequest()
+    
+        do {
+            let results = try coreDataContext.fetch(request)
+            let quizzesArray = results
+            var quizzesMatrix:[[Quiz]] = []
+            let categoriesArray:[QuizCategory] = Array(Set(quizzesArray.map({$0.category})))
+            for category in categoriesArray{
+                var row:[Quiz] = []
+                for quiz in quizzesArray{
+                    if quiz.category == category{
+                        row.append(quiz)
+                    }
+                }
+                quizzesMatrix.append(row)
+            }
+            self.repository?.quizzes? = quizzesMatrix
+        } catch {
+            print("Error when fetching quizzes from core data: \(error)")
+        }
     }
     func saveQuizzes(_ quizzes: [[Quiz]]) {
-        <#code#>
+        quizzes.forEach { quiz in
+            do {
+                let cdQuiz = try fetchQuiz(withId: quiz.id) ?? CDQuiz(context: coreDataContext)
+                quiz.populate(cdQuiz, in: coreDataContext)
+            } catch {
+                print("Error when fetching/creating a quiz: \(error)")
+            }
+
+            do {
+                try coreDataContext.save()
+            } catch {
+                print("Error when saving updated quiz: \(error)")
+            }
+        }
     }
     
-    func deleteAll() {
-        <#code#>
+    func deleteAll() throws{
+        let request: NSFetchRequest<CDQuiz> = CDQuiz.fetchRequest()
+        let quizzesToDelete = try coreDataContext.fetch(request)
+        quizzesToDelete.forEach { coreDataContext.delete($0) }
+        try coreDataContext.save()
     }
     
 }
