@@ -6,6 +6,7 @@ target 'QuizApp' do
   use_frameworks!
 
   # Pods for QuizApp
+  pod 'ReachabilitySwift'
   pod 'PureLayout'
 
 end

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17511" systemVersion="19H2" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CDquestion" representedClassName="CDquestion" syncable="YES">
+        <attribute name="answears" optional="YES" attributeType="Transformable"/>
+        <attribute name="correctAnswear" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="question" optional="YES" attributeType="String"/>
+        <relationship name="questionQuiz" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDquiz" inverseName="quizQuestion" inverseEntity="CDquiz"/>
+    </entity>
+    <entity name="CDquiz" representedClassName="CDquiz" syncable="YES">
+        <attribute name="category" optional="YES" attributeType="Transformable"/>
+        <attribute name="descriptionAtr" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="imageUrl" optional="YES" attributeType="String"/>
+        <attribute name="level" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="questions" optional="YES" attributeType="Transformable"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="quizQuestion" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDquestion" inverseName="questionQuiz" inverseEntity="CDquestion"/>
+    </entity>
+    <elements>
+        <element name="CDquestion" positionX="232.56640625" positionY="-8.703125" width="128" height="118"/>
+        <element name="CDquiz" positionX="-63" positionY="-18" width="128" height="163"/>
+    </elements>
+</model>

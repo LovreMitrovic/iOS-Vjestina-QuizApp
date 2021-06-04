@@ -33,36 +33,39 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
     private var heightOfCell:CGFloat!
     
     //PODACI
-    private var quizzes:[[Quiz]]! = []
-    private var dataService:DataService!
+    var quizzes:[[Quiz]]! = []
     private var numOfNBA:Int!
     private var allCategories:[QuizCategory]!
     
-    @objc func getQuizzes()->Void{
-        dataService = DataService()
-        let quizzesArray:[Quiz] = dataService.fetchQuizes()
-        let categoriesArray:[QuizCategory] = Array(Set(quizzesArray.map({$0.category})))
-        for category in categoriesArray{
-            var row:[Quiz]! = []
-            for quiz in quizzesArray{
-                if quiz.category == category{
-                    row.append(quiz)
-                }
-            }
-            quizzes.append(row)
-        }
-        buttonGetQuizzes.isEnabled = false
-        showQuizzes()
+    
+    private var router:AppRouter!
+    private var quizzesPresenter:QuizzesPresenter!
+    
+    init(router: AppRouter){
+        super.init(nibName: nil, bundle: nil)
+        self.router = router
     }
     
-    private func showQuizzes(){
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func getQuizzes()->Void{
+        quizzes = []
+        quizzesPresenter = QuizzesPresenter(viewController: self)
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.quizzesPresenter.presentQuizzes()
+        }
+    }
+
+    func showQuizzes(){
         labelFunFact = UILabel()
         view.addSubview(labelFunFact)
         labelNBA = UILabel()
         view.addSubview(labelNBA)
         viewOfQuizzes = UITableView()
         view.addSubview(viewOfQuizzes)
-        viewOfQuizzes.register(UITableViewCell.self, forCellReuseIdentifier: "QuizCell")
+        viewOfQuizzes.register(QuizCellView.self, forCellReuseIdentifier: "QuizCell")
         viewOfQuizzes.dataSource = self
         viewOfQuizzes.delegate = self
         
@@ -99,6 +102,10 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         buildViews()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     private func buildViews(){
@@ -180,7 +187,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate {
         }
         return ans
     }
-
+    
 }
 
 extension QuizzesViewController: UITableViewDataSource {
@@ -199,68 +206,26 @@ extension QuizzesViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "QuizCell", for: indexPath as IndexPath)
-        cell.backgroundColor = Styles.secondColorLighter
-        cell.textLabel!.textColor = Styles.secondColor
+        let cell:QuizCellView!
+        cell = tableView.dequeueReusableCell(withIdentifier: "QuizCell", for: indexPath as IndexPath) as! QuizCellView
         
-        //CREATE VIEWS
-        let labelQuizTitle = UILabel()
-        cell.addSubview(labelQuizTitle)
-        let labelQuizDescription = UILabel()
-        cell.addSubview(labelQuizDescription)
-        let imageViewQuiz = UIImageView(image:UIImage(named: "picture.jpg"))
-        cell.addSubview(imageViewQuiz)
-        let viewLevel = LevelView(frame: CGRect(x: 0, y: 0, width: 80, height: 30),levelOfQuestion: quizzes[indexPath.section][indexPath.row].level)
-        cell.addSubview((viewLevel))
+        cell.labelTitle.text = quizzes[indexPath.section][indexPath.row].title
+        cell.labelDescription.text = quizzes[indexPath.section][indexPath.row].description
+
+        let url = NSURL(string: quizzes[indexPath.section][indexPath.row].imageUrl)! as URL
+        if let imageData: NSData = NSData(contentsOf: url) {
+            cell.imageQuiz.image = UIImage(data: imageData as Data)
+        }
         
-        //STYLE VIEWS
-        labelQuizTitle.text = quizzes[indexPath.section][indexPath.row].title
-        labelQuizTitle.textColor = Styles.secondColor
-        
-        labelQuizDescription.text = quizzes[indexPath.section][indexPath.row].description
-        labelQuizDescription.textColor = Styles.secondColor
-        labelQuizDescription.lineBreakMode = .byWordWrapping
-        labelQuizDescription.numberOfLines = 0
-        
-        imageViewQuiz.contentMode = .scaleToFill
-        
-        //DIMENSIONS
-        let imageHeight:CGFloat! = 80
-        let leftWidth:CGFloat! = 80
-        let titleHeight:CGFloat! = 20
-        let rightWidth:CGFloat! = widthOfComponents - leftWidth - 20
-        let fullWidth:CGFloat! = widthOfComponents - 20
-        let descriptionHeight:CGFloat! = 50
-        let levelWidth:CGFloat! = 80
-        
-        imageViewQuiz.autoSetDimensions(to: CGSize(width: leftWidth, height: imageHeight))
-        
-        labelQuizTitle.autoSetDimensions(to: CGSize(width: fullWidth, height: titleHeight))
-        
-        labelQuizDescription.autoSetDimensions(to: CGSize(width: rightWidth, height: descriptionHeight))
-        
-        viewLevel.autoSetDimensions(to: CGSize(width: levelWidth, height: titleHeight))
-        
-        //POSITION
-        let leadingMargin:CGFloat! = 10
-        let HorizontalMiddleMargin:CGFloat! = 10
-        let topMargin:CGFloat! = 10
-        let verticalMiddleMargin:CGFloat! = 10
-        
-        labelQuizTitle.autoPinEdge(toSuperviewEdge: .top, withInset: topMargin)
-        labelQuizTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: leadingMargin)
-        
-        imageViewQuiz.autoPinEdge(.top, to: .bottom, of: labelQuizTitle, withOffset: verticalMiddleMargin)
-        imageViewQuiz.autoPinEdge(toSuperviewEdge: .leading, withInset: leadingMargin)
-    
-        labelQuizDescription.autoPinEdge(.top, to: .bottom, of: labelQuizTitle, withOffset: verticalMiddleMargin)
-        labelQuizDescription.autoPinEdge(.leading, to: .trailing, of: imageViewQuiz, withOffset: HorizontalMiddleMargin)
-        
-        viewLevel.autoPinEdge(.top, to: .bottom, of: imageViewQuiz, withOffset: verticalMiddleMargin)
-        viewLevel.autoPinEdge(toSuperviewEdge: .leading, withInset: (widthOfComponents-levelWidth)/2)
+        //cell.imageQuiz.image = UIImage(named: quizzes[indexPath.section][indexPath.row].imageUrl)
+        cell.viewLevel.setLevel(levelOfQuestion: quizzes[indexPath.section][indexPath.row].level)
         
         return cell
         
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        router.showQuiz(myQuiz: quizzes[indexPath[0]][indexPath[1]])
     }
     
 }
